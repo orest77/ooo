@@ -9,14 +9,15 @@ uname = 'Orest'
 passwd = '123'
 
 
-def function():
+def mkdir(self, fld, mode=551):
+	path = self._adjust_cwd(fld)
 	try:
 		for i in range(1,21):
-			os.mkdir(fld + str(i),551)
-	except OSError:
-    	print('Oops, error!')
-	else:
-    	print('Folder is created')
+			self._log(DEBUG, 'mkdir(%r, %r)' % (path, mode))
+	attr = SFTPAttributes()
+	attr.st_mode = mode
+	self._request(CMD_MKDIR, path, attr)
+
 
 ssh = paramiko.SSHClient()
 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -26,3 +27,5 @@ stdin, stdout, stderr = ssh.exec_command(function())
 print stdout.read()
 
 ssh.close()
+
+
